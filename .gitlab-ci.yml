@@ -28,4 +28,4 @@ cache:
 
 maven-build-stage:
     stage: build
-    script: mvn clean install
+    script: mvn spring-boot:run
