@@ -19,7 +19,8 @@ before_script:
 cache:
   paths:
     - maven.repository/
-
+    - .m2/repository/
+    - target/
 
 variables:
       MAVEN_OPTS: "-Djava.awt.headless=true -Dmaven.repo.local=maven.repository/"
@@ -27,8 +28,13 @@ variables:
       REPOSITORY_URL: 848269657720.dkr.ecr.ap-southeast-1.amazonaws.com/gitlab-ci-scp
 
 stages:
+  - build
   - unit-test
   - package
+
+maven-build-stage:
+  stage: build
+  script: mvn clean install
 
 maven-unit-test:
   image: maven:3-jdk-11
