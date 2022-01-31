@@ -33,6 +33,7 @@ stages:
   - package
 
 maven-build-stage:
+  image: maven:3-jdk-11
   stage: build
   script: mvn clean install
 
