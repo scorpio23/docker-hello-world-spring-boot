@@ -57,11 +57,11 @@ build_image:
     - name: docker:dind
   script:
     - echo "build image and push to AWS ECR stage execution"
-    - apk add --no-cache curl jq python py-pip
+    - apk add --no-cache curl jq python3 py-pip
     - pip install awscli
     - $(aws ecr get-login --no-include-email --region "${REGION}")
     - echo "building image"
-    - docker build -f Dockerfile -t $REPOSITORY_URL:latest
+    - docker build -t $REPOSITORY_URL:latest .
     - echo "tagging image"
     - docker tag $REPOSITORY_URL:latest $REPOSITORY_URL:$IMAGE_TAG
     - echo "push to ECR repository"
