@@ -57,6 +57,7 @@ build_image:
     - name: docker:dind
   script:
     - echo "build image and push to AWS ECR stage execution"
+    - apk add --no-cache curl jq python py-pip
     - pip install awscli
     - $(aws ecr get-login --no-include-email --region "${REGION}")
     - echo "building image"
