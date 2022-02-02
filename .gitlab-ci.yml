@@ -32,6 +32,7 @@ stages:
   - build
   - unit-test
   - package
+  - deploy
 
 maven-build-stage:
   image: maven:3-jdk-11
@@ -67,3 +68,15 @@ build_image:
     - echo "push to ECR repository"
     - docker push $REPOSITORY_URL:latest
     - docker push $REPOSITORY_URL:$IMAGE_TAG
+
+deploy:
+  image: python:latest
+  stage: deploy
+  script:
+    - echo "deployment to ECS started"
+    - pip install awscli
+    - echo $REPOSITORY_URL:$IMAGE_TAG
+    - echo "deployment to ECS started - ECS register task definition"
+    - aws ecs register-task-definition --region "${REGION}" --family MyTaskDef --cli-input-json file://aws/ecs-task-definition.json
+    - echo "deployment to ECS started - ECS update services and deploy"
+    - aws ecs update-service --region "${REGION}" --cluster MyCluster --service MyService  --task-definition MyTaskDef
