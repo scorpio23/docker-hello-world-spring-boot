@@ -25,7 +25,7 @@ cache:
 variables:
       MAVEN_OPTS: "-Djava.awt.headless=true -Dmaven.repo.local=maven.repository/"
       MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
-      REPOSITORY_URL: 848269657720.dkr.ecr.ap-southeast-1.amazonaws.com/gitlab-ci-scp
+      REPOSITORY_URL: "848269657720.dkr.ecr.ap-southeast-1.amazonaws.com/gitlab-ci-scp"
 
 stages:
   - build
