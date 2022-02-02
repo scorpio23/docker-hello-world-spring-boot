@@ -26,6 +26,7 @@ variables:
       MAVEN_OPTS: "-Djava.awt.headless=true -Dmaven.repo.local=maven.repository/"
       MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
       REPOSITORY_URL: "848269657720.dkr.ecr.ap-southeast-1.amazonaws.com/gitlab-ci-scp"
+      REGION: "ap-southeast-1"
 
 stages:
   - build
@@ -35,12 +36,15 @@ stages:
 maven-build-stage:
   image: maven:3-jdk-11
   stage: build
-  script: mvn clean install
+  script: 
+    - echo "build stage execution"
+    - mvn clean install
 
 maven-unit-test:
   image: maven:3-jdk-11
   stage: unit-test
   script:
+    - echo "unit test stage execution"
     - mvn $MAVEN_CLI_OPTS clean test -P unit-test
 
 build_image:
@@ -49,10 +53,14 @@ build_image:
   services:
     - name: docker:dind
   script:
+    - echo "build image and push to AWS ECR stage execution"
     - apk add — no-cache curl jq python py-pip
     - pip install awscli
-    - $(aws ecr get-login — no-include-email — region ap-southeast-1)
-    - docker build -t $REPOSITORY_URL:latest .
+    - $(aws ecr get-login --no-include-email --region "${REGION}")
+    - echo "building image"
+    - docker build -f Dockerfile -t $REPOSITORY_URL:latest
+    - echo "tagging image"
     - docker tag $REPOSITORY_URL:latest $REPOSITORY_URL:$IMAGE_TAG
+    - echo "push to ECR repository"
     - docker push $REPOSITORY_URL:latest
     - docker push $REPOSITORY_URL:$IMAGE_TAG
