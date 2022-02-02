@@ -38,7 +38,10 @@ maven-build-stage:
   stage: build
   script: 
     - echo "build stage execution"
-    - mvn clean install
+    - "mvn package -B"
+  artifacts:
+    paths:
+      - target/*.jar
 
 maven-unit-test:
   image: maven:3-jdk-11
